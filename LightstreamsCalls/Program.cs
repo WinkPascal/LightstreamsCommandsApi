@@ -16,7 +16,7 @@ namespace LightstreamsCalls
     class Program
     {
         static string LogPath = @"logfile.txt";
-        
+
         /*
         sign up) password => accountId
         sign in) username, password => token
@@ -32,84 +32,126 @@ namespace LightstreamsCalls
 
         // token is alleen nodig voor het streamen van een file 
         // inloggen in de smart vault is dus alleen nodig voor de data gatherer
-
-
+        private static JArray accounts;
+        private static string acl;
+        private static string to;
+        private static string owner;
+        private static string data;
+        private static string password;
+        private static string meta;
+        private static string ext;
+        private static string permission;
+        private static string amount;
+        enum UseCase
+        {
+            transferBalance,
+            update,
+            createToken,
+            getBalance,
+            createAccount,
+            readFile,
+            grantAccess,
+            addRaw
+        }
         static void Main(string[] args)
         {
+            accounts = new JArray();
+            accounts.Add(new JObject { { "accountId", "0x63A8273478bECf8F606897242A1f1E4E3F9F75Ea" }, { "password", "" } }); // siebrand local node 1 
+            accounts.Add(new JObject { { "accountId", "0x6c9Db8b7fC5A753C5DD41E8569371D22aa6C379a" }, { "password", "PascalWink1" } }); // pascal local node 1 
 
-            //  Console.WriteLine(createAccount("PascalWink1!"));
-            string owner = "0x6c9Db8b7fC5A753C5DD41E8569371D22aa6C379a";
-            string password = "PascalWink1";
+            switch (UseCase.transferBalance)
+            {
+                case UseCase.transferBalance:
+                    owner = "0x6c9Db8b7fC5A753C5DD41E8569371D22aa6C379a";
+                    password = "PascalWink1";
+                    to = "0x63A8273478bECf8F606897242A1f1E4E3F9F75Ea";
+                    amount = "10000";
 
+                    transferBalance(owner, password, to, amount);
+                    break;
 
-            string data = "{'name' : 'PascalWink', " +
-                         "'email' : 'PascalWink@gmail.com'}";
-            string meta = "QmWpX3uK7sTqyb6gbbUnqVGKSp6GMjtZ46FDmJgGT214LA";
-            string ext = "ext";
-            string acl = "0xa23E343d450C1Cb5B3C7eD0900c5DA38e884b43c";
+                case UseCase.update:
+                    data = "{'name' : 'PascalWink', " +
+                                "'email' : 'PascalWink@gmail.com'}";
+                    ext = "ext";
+                    owner = "0x6c9Db8b7fC5A753C5DD41E8569371D22aa6C379a";
+                    meta = "QmWpX3uK7sTqyb6gbbUnqVGKSp6GMjtZ46FDmJgGT214LA";
 
-            //string to = "0xc887BB6E74761E39f19d4898eEE4908491C05322";  //lokaal op node 1 (smart hub)
-            string to = "0x63A8273478bECf8F606897242A1f1E4E3F9F75Ea"; //op siebrand zijn pc node 1 
+                    update(data, ext, owner, meta);
+                    break;
+                
+                case UseCase.createToken:
+                    owner = "0x6c9Db8b7fC5A753C5DD41E8569371D22aa6C379a";
+                    password = "PascalWink1";
 
+                    createToken(owner, password);
+                    break;
+                
+                case UseCase.getBalance:
+                    owner = "0x6c9Db8b7fC5A753C5DD41E8569371D22aa6C379a";
+                    getBalance(owner);
+                    break;
+                
+                case UseCase.createAccount:
+                    password = "PascalWink1";
 
-            //            Console.WriteLine(grantAccess(acl, owner, password, to, "read"));s
-            Console.WriteLine("receiver balance: " + getBalance(to));
-            Console.WriteLine("sender balance: " + getBalance(owner));
-            Console.WriteLine("=======================================================");
+                    createAccount(password);
+                    break;
+                
+                case UseCase.readFile:
+                    owner = "0x6c9Db8b7fC5A753C5DD41E8569371D22aa6C379a";
+                    password = "PascalWink1";
 
-            Console.WriteLine(transferBalance(owner, password, to, "64727502999997899998"));
+                    string token = createToken(owner, password);
+                    meta = "QmWpX3uK7sTqyb6gbbUnqVGKSp6GMjtZ46FDmJgGT214LA";
 
-            Console.WriteLine("=======================================================");
-            Console.WriteLine("receiver balance: " + getBalance(to));
-            Console.WriteLine("sender balance: " + getBalance(owner));
+                    readFile(token, meta);
+                    break;
+                
+                case UseCase.grantAccess:
+                    acl = "0xa23E343d450C1Cb5B3C7eD0900c5DA38e884b43c";
+                    owner = "0x6c9Db8b7fC5A753C5DD41E8569371D22aa6C379a";
+                    password = "PascalWink1";
+                    to = "0x63A8273478bECf8F606897242A1f1E4E3F9F75Ea";
+                    permission = "noaccess";
+
+                    grantAccess(acl, owner, password, to, permission);
+                    break;
+                
+                case UseCase.addRaw:
+                    data = "{'name' : 'PascalWink', " +
+                            "'email' : 'PascalWink@gmail.com'}";
+                    ext = "ext";
+                    owner = "0x6c9Db8b7fC5A753C5DD41E8569371D22aa6C379a";
+                    password = "PascalWink1";
+
+                    addRaw(data, ext, owner, password);
+                    break;
+            }
         }
-        private static void LogFile(string accountid)
+        
+        private static JObject getAccount(String accountId)
         {
-            string[] a = System.IO.File.ReadAllLines(LogPath);
-            Boolean exists = false;
-            foreach (string line in a)
+
+            foreach (JObject account in accounts)
             {
-                string[] account = Regex.Split(line, " || ");
-                if (account[0] == accountid)
+                if (account.GetValue("accountId").ToString().Equals(accountId))
                 {
-                    exists = true;
+                    return account;
                 }
             }
-            if (!exists)
-            {
-                a.Append(accountid + " || 0" );
-            }
-            Console.WriteLine("=======================================================");
-            Console.WriteLine("=======================================================");
-            Console.WriteLine("=======================================================");
-            Console.WriteLine("=======================================================");
-            Console.WriteLine("=======================================================");
-            Console.WriteLine("=======================================================");
-            Console.WriteLine("=======================================================");
-
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(LogPath)){
-
-                foreach (string line in a)
-                {
-                    string[] account = Regex.Split(line, " || ");
-                    account[1] = getBalance(account[0]);
-                    file.WriteLine(account[0] + " || " + account[1]);
-                    Console.WriteLine(account[0] + " || " + account[1]);
-                }
-            }
-            File.Open(LogPath, FileMode.Open);
+            return null;
         }
+
 
         public static string transferBalance(string from, string password, string to, string PHT_amount)
         {
-            //transfer balance to other account lightstreams
             String reqUrl = "http://localhost:9091/wallet/transfer";
 
             HttpWebRequest Req = (HttpWebRequest)WebRequest.Create(reqUrl);
             Req.ContentType = "application/json";
             Req.Method = "POST";
 
-            // Write request body
             using (var streamWriter = new StreamWriter(Req.GetRequestStream()))
             {
                 String json = "{\"from\": \"" + from + "\", " +
@@ -119,27 +161,22 @@ namespace LightstreamsCalls
                 streamWriter.Write(json);
             }
 
-            // Get response body
             var autResponse = (HttpWebResponse)Req.GetResponse();
             using (var streamReader = new StreamReader(autResponse.GetResponseStream()))
             {
                 var result = streamReader.ReadToEnd();
-//                LogFile(to);
-          //      LogFile(from);
                 return JObject.Parse(result).ToString();
             }
         }
 
         public static JObject update(string data, String ext, String owner, String meta)
         {
-            //update new info in blockchain
             String reqUrl = "http://localhost:9091/storage/update-raw";
 
             HttpWebRequest Req = (HttpWebRequest)WebRequest.Create(reqUrl);
             Req.ContentType = "application/json";
             Req.Method = "POST";
 
-            // Write request body
             using (var streamWriter = new StreamWriter(Req.GetRequestStream()))
             {
                 String json = "{\"data\": \"" + data + "\", " +
@@ -149,7 +186,6 @@ namespace LightstreamsCalls
                 streamWriter.Write(json);
             }
 
-            // Get response body
             var autResponse = (HttpWebResponse)Req.GetResponse();
             using (var streamReader = new StreamReader(autResponse.GetResponseStream()))
             {
@@ -160,17 +196,13 @@ namespace LightstreamsCalls
 
             private static String createToken(String account, String password)
         {
-            // GENERATE AUTHENTICATION TOKEN WITH POST REQUEST
-            // Declare variables
             String token;
             String autUrl = "http://localhost:9091/user/signin";
 
-            // Set up request
             HttpWebRequest autReq = (HttpWebRequest)WebRequest.Create(autUrl);
             autReq.ContentType = "application/json";
             autReq.Method = "POST";
 
-            // Write request body
             using (var streamWriter = new StreamWriter(autReq.GetRequestStream()))
             {
                 String json = "{\"account\": \"" + account + "\"," +
@@ -178,7 +210,6 @@ namespace LightstreamsCalls
                 streamWriter.Write(json);
             }
 
-            // Get response body
             try
             {
                 var autResponse = (HttpWebResponse)autReq.GetResponse();
@@ -198,17 +229,13 @@ namespace LightstreamsCalls
         }
         private static String getBalance(String account)
         {
-            // GET ACCOUNT BALANCE WITH GET REQUEST
-            // Declare variables
             String balance;
             String balUrl = "http://localhost:9091/wallet/balance?account=" + account;
 
-            // Set up request
             HttpWebRequest balReq = (HttpWebRequest)WebRequest.Create(balUrl);
             balReq.ContentType = "application/json";
             balReq.Method = "GET";
 
-            // Get response body
             var balResponse = (HttpWebResponse)balReq.GetResponse();
             using (var streamReader = new StreamReader(balResponse.GetResponseStream()))
             {
@@ -222,24 +249,19 @@ namespace LightstreamsCalls
 
         private static String createAccount(String wachtwoord)
         {
-            // CREATE ACCOUNT WITH POST REQUEST
-            // Declare variables
             String account;
             String reqUrl = "http://localhost:9091/user/signup";
 
-            // Set up request
             HttpWebRequest Req = (HttpWebRequest)WebRequest.Create(reqUrl);
             Req.ContentType = "application/json";
             Req.Method = "POST";
 
-            // Write request body
             using (var streamWriter = new StreamWriter(Req.GetRequestStream()))
             {
                 string json = "{\"password\": \"" + wachtwoord + "\"}";
                 streamWriter.Write(json);
             }
 
-            // Get response body
             var reqResponse = (HttpWebResponse)Req.GetResponse();
             using (var streamReader = new StreamReader(reqResponse.GetResponseStream()))
             {
@@ -253,20 +275,16 @@ namespace LightstreamsCalls
 
         private static String readFile(String token, String meta)
         {
-            // GET FILE WITH GET REQUEST
-            // Declare variables
             String result;
             String getUrl = "http://localhost:9091/storage/stream?meta=" + meta + "&token=" + token;
             Debug.WriteLine(getUrl);
             Debug.WriteLine(meta);
             Debug.WriteLine(token);
 
-            // Set up request
             HttpWebRequest getReq = (HttpWebRequest)WebRequest.Create(getUrl);
             getReq.ContentType = "application/json";
             getReq.Method = "GET";
 
-            // Get response body
             var response = (HttpWebResponse)getReq.GetResponse();
             using (var streamReader = new StreamReader(response.GetResponseStream()))
             {
@@ -278,17 +296,13 @@ namespace LightstreamsCalls
 
         private static Boolean grantAccess(String acl, String owner, String password, String to, String permission)
         {
-            // GRANT ACCESS WITH POST REQUEST
-            // Declare variables
             String resp;
             String reqUrl = "http://localhost:9091/acl/grant";
 
-            // Set up request
             HttpWebRequest Req = (HttpWebRequest)WebRequest.Create(reqUrl);
             Req.ContentType = "application/json";
             Req.Method = "POST";
 
-            // Write request body
             using (var streamWriter = new StreamWriter(Req.GetRequestStream()))
             {
                 string json = "{\"acl\": \"" + acl + "\"," +
@@ -299,7 +313,6 @@ namespace LightstreamsCalls
                 streamWriter.Write(json);
             }
 
-            // Get response body
             var reqResponse = (HttpWebResponse)Req.GetResponse();
             using (var streamReader = new StreamReader(reqResponse.GetResponseStream()))
             {
@@ -313,17 +326,13 @@ namespace LightstreamsCalls
 
         private static Boolean addRaw (String data, String ext, String owner, String password)
         {
-            // GRANT ACCESS WITH POST REQUEST
-            // Declare variables
             String resp;
             String reqUrl = "http://localhost:9091/storage/add-raw";
 
-            // Set up request
             HttpWebRequest Req = (HttpWebRequest)WebRequest.Create(reqUrl);
             Req.ContentType = "application/json";
             Req.Method = "POST";
 
-            // Write request body
             using (var streamWriter = new StreamWriter(Req.GetRequestStream()))
             {
                 string json = "{\"data\": \"" + data + "\", " +
@@ -333,7 +342,6 @@ namespace LightstreamsCalls
                 streamWriter.Write(json);
             }
             
-            // Get response body
             var reqResponse = (HttpWebResponse)Req.GetResponse();
             using (var streamReader = new StreamReader(reqResponse.GetResponseStream()))
             {
@@ -344,6 +352,5 @@ namespace LightstreamsCalls
             }
             return true;
         }
-
     }
 }
