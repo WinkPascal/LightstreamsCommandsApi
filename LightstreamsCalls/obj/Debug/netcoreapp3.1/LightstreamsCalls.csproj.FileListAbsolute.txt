@@ -1,0 +1,15 @@
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\bin\Debug\netcoreapp3.1\LightstreamsCalls.exe
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\bin\Debug\netcoreapp3.1\LightstreamsCalls.deps.json
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\bin\Debug\netcoreapp3.1\LightstreamsCalls.runtimeconfig.json
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\bin\Debug\netcoreapp3.1\LightstreamsCalls.runtimeconfig.dev.json
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\bin\Debug\netcoreapp3.1\LightstreamsCalls.dll
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\bin\Debug\netcoreapp3.1\LightstreamsCalls.pdb
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\obj\Debug\netcoreapp3.1\LightstreamsCalls.csprojAssemblyReference.cache
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\obj\Debug\netcoreapp3.1\LightstreamsCalls.AssemblyInfoInputs.cache
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\obj\Debug\netcoreapp3.1\LightstreamsCalls.AssemblyInfo.cs
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\obj\Debug\netcoreapp3.1\LightstreamsCalls.dll
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\obj\Debug\netcoreapp3.1\LightstreamsCalls.pdb
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\obj\Debug\netcoreapp3.1\LightstreamsCalls.genruntimeconfig.cache
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\obj\Debug\netcoreapp3.1\LightstreamsCalls.csproj.CoreCompileInputs.cache
+C:\Projects\Fenetre\LightstreamsCalls\LightstreamsCalls\obj\Debug\netcoreapp3.1\LightstreamsCalls.csproj.CopyComplete

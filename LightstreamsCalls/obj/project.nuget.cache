@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "5CQpxsSyzq2X6MJ4V1U5iXUOf1vXgEWuNiU2BdBKNlTMjmQwC6a3n3rTnlTQFsAy5Jbee6uLWFtNud15EJtn5w==",
+  "success": true,
+  "projectFilePath": "C:\\Projects\\Fenetre\\LightstreamsCalls\\LightstreamsCalls\\LightstreamsCalls.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\winkp\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
